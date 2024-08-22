@@ -54,8 +54,9 @@ RUBY
 run 'chmod +x bin/copy_samples'
 run 'echo "\nconfig/database.yml" >> .gitignore'
 run 'echo "config/secrets.yml" >> .gitignore'
-
-run 'cp config/database.yml config/database.sample.yml'
+if File.exist?('config/database.yml')
+  run 'cp config/database.yml config/database.sample.yml'
+end
 
 file 'config/secrets.sample.yml', <<-YML
 development: &dev
@@ -80,7 +81,12 @@ production:
   <<: *dev
 YML
 
-run 'rm config/secrets.yml && bin/copy_samples'
+if File.exist?('config/secrets.yml')
+  run 'rm config/secrets.yml'
+end
+if File.exist?('bin/copy_samples')
+  run 'rm bin/copy_samples'
+end
 
 ### RSpec
 
